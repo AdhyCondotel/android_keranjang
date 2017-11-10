@@ -24,9 +24,11 @@ import butterknife.ButterKnife;
  * Created by Lincoln on 31/03/16.
  */
 
-public class TroliAdapter extends RecyclerView.Adapter<TroliAdapter.MyViewHolder>  {
+public class TroliAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
     private List<ListKeranjangItem> resultsList;
     private Context mContext;
+
+    public static final int WithoutImage=1,WithImage=0;
 
     public TroliAdapter(Context context, List<ListKeranjangItem> resultsList) {
         this.mContext = context;
@@ -39,44 +41,38 @@ public class TroliAdapter extends RecyclerView.Adapter<TroliAdapter.MyViewHolder
 
 
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_list_keranjang_, parent, false);
-        return new MyViewHolder(itemView);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+        View view;
+        switch (viewType){
+            case WithImage:
+                view=LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_header,parent,false);
+                MyViewHolderHeader imageViewHolder=new MyViewHolderHeader(view);
+                return imageViewHolder;
+
+            case WithoutImage:
+                view=LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_keranjang,parent,false);
+                MyViewHolder withoutImageViewHolder=new MyViewHolder(view);
+                return withoutImageViewHolder;
+        }
+        return null;
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, final int position) {
-        DecimalFormat formatter = new DecimalFormat("#,###,###");
-        Glide.with(mContext).load(Const.BASE_URL+"/m/img/produk/"+resultsList.get(position).getGambarProduk()).into(holder.imgProduk);
-        holder.txt_name.setText(resultsList.get(position).getNamaProduk().toString());
-        holder.txt_toko.setText("Dijual oleh "+resultsList.get(position).getNamaToko().toString());
-        holder.textViewJumlah.setText(String.valueOf("Jumlah : "+ resultsList.get(position).getQty()));
-        holder.txt_total.setText("Rp "+formatter.format(Integer.valueOf(resultsList.get(position).getTotalharga())) );
-        if ((resultsList.get(position).getDiskon()) > 0 ) {
-            holder.txtKeterangan.setText("Harga termasuk potongan  " + (Integer.valueOf(resultsList.get(position).getDiskon()))+"%" );
-        } else {
-            holder.txtKeterangan.setText("");
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+        //DecimalFormat formatter = new DecimalFormat("#,###,###");
+        switch (resultsList.get(position).getData()){
+            case WithImage:
+                ((ImageViewHolder) holder).imageView.setImageResource(dataList.get(position).photo);
+                ((ImageViewHolder) holder).title.setText(dataList.get(position).title);
+                ((ImageViewHolder) holder).about.setText(dataList.get(position).about);
+                break;
+            case WithoutImage:
+                ((WithoutImageViewHolder) holder).title.setText(dataList.get(position).title);
+                ((WithoutImageViewHolder) holder).about.setText(dataList.get(position).about);
+                break;
         }
 
-        if (resultsList.get(position).getJenisProduk().toString().equals("langganan")) {
-            holder.textViewJenis.setText("Paket " + resultsList.get(position).getJenisProduk().toString() +
-                    "\n" + resultsList.get(position).getKeterangan().toString());
-
-        }else if (resultsList.get(position).getJenisProduk().toString().equals("ultah")) {
-            holder.textViewJenis.setText("Paket " + resultsList.get(position).getJenisProduk().toString() +
-                    "\n" + resultsList.get(position).getKeterangan().toString());
-        }else {
-            holder.textViewJenis.setText("");
-        }
-        holder.delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SessionManager = PrefUtils.getCurrentUser(mContext);
-                presenter = new KeranjangPresenter((KeranjangActivity) mContext);
-                presenter.DelDataKeranjang(SessionManager.getToken(), resultsList.get(position).getKdKeranjang());
-            }
-        });
     }
 
     @Override
@@ -84,16 +80,28 @@ public class TroliAdapter extends RecyclerView.Adapter<TroliAdapter.MyViewHolder
         return resultsList.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.imageViewProduk) ImageView imgProduk;
-        @BindView(R.id.textViewNamaProduk) TextView txt_name;
-        @BindView(R.id.textViewNamaToko) TextView txt_toko;
-        @BindView(R.id.textViewJumlah) TextView textViewJumlah;
-        @BindView(R.id.textViewTotalHarga) TextView txt_total;
-        @BindView(R.id.textViewKeterangan) TextView txtKeterangan;
-        @BindView(R.id.imageButtonHapus) ImageButton delete;
 
-        @BindView(R.id.textViewJenis) TextView textViewJenis;
+    @Override
+    public int getItemViewType(int position) {
+        if (resultsList.get(position).getData() == WithImage) {
+            return WithImage;}
+        return WithoutImage;
+    }
+
+    public class MyViewHolderHeader extends RecyclerView.ViewHolder {
+        @BindView(R.id.textViewToko) ImageView textViewToko;
+
+        public MyViewHolderHeader(View view) {
+            super(view);
+            ButterKnife.bind(this, view);
+
+        }
+    }
+
+
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.textViewNama) TextView textViewNama;
+        @BindView(R.id.textViewHarga) TextView textViewHarga;
 
         public MyViewHolder(View view) {
             super(view);
@@ -101,4 +109,7 @@ public class TroliAdapter extends RecyclerView.Adapter<TroliAdapter.MyViewHolder
 
         }
     }
+
+
+
 }
