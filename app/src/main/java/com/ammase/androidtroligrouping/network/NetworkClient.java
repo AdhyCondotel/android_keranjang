@@ -1,5 +1,5 @@
 package com.ammase.androidtroligrouping.network;
-import com.ammase.androidtroligrouping.Const;
+import com.ammase.androidtroligrouping.utils.Const;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

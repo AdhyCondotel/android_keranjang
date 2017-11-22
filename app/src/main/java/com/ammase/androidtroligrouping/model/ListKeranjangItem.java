@@ -1,8 +1,10 @@
 package com.ammase.androidtroligrouping.model;
 
-import java.util.List;
-import javax.annotation.Generated;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
+
+import javax.annotation.Generated;
 
 @Generated("com.robohorse.robopojogenerator")
 public class ListKeranjangItem{
@@ -15,6 +17,14 @@ public class ListKeranjangItem{
 
 	@SerializedName("nama_toko")
 	private String namaToko;
+
+	public static final int VIEW_HEADER = 0;
+	public static final int VIEW_BODY = 1;
+	public int type;
+
+	public ListKeranjangItem(int type) {
+		this.type = type;
+	}
 
 	public void setData(List<DataItem> data){
 		this.data = data;
@@ -39,6 +49,7 @@ public class ListKeranjangItem{
 	public String getNamaToko(){
 		return namaToko;
 	}
+
 
 	@Override
  	public String toString(){

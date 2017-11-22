@@ -1,7 +1,8 @@
 package com.ammase.androidtroligrouping.model;
 
-import javax.annotation.Generated;
 import com.google.gson.annotations.SerializedName;
+
+import javax.annotation.Generated;
 
 @Generated("com.robohorse.robopojogenerator")
 public class DataItem{

@@ -1,4 +1,6 @@
-package com.ammase.androidtroligrouping;
+package com.ammase.androidtroligrouping.utils;
+
+import com.ammase.androidtroligrouping.BuildConfig;
 
 /**
  * Created by programmer on 13/07/17.

@@ -1,11 +1,13 @@
 package com.ammase.androidtroligrouping.model;
 
-import java.util.List;
-import javax.annotation.Generated;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
+import javax.annotation.Generated;
+
 @Generated("com.robohorse.robopojogenerator")
-public class ResponseGetKerajang{
+public class ResponseTroli{
 
 	@SerializedName("list_keranjang")
 	private List<ListKeranjangItem> listKeranjang;
@@ -21,7 +23,7 @@ public class ResponseGetKerajang{
 	@Override
  	public String toString(){
 		return 
-			"ResponseGetKerajang{" + 
+			"ResponseTroli{" + 
 			"list_keranjang = '" + listKeranjang + '\'' + 
 			"}";
 		}

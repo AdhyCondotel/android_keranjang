@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Android Troli Grouping</string>
+
+    <string name="token_device">2y10bHfu9nbUMt05.4q.4sWO7eG2QhAcn8GUbdOO0in7CMaBtvQULgRHq</string>
+    <string name="Auth">$2y$10$oO4k2hG2LGl.fI6n.uGTO.g0lDMKVP8/aBPnlJHo4q0fPcmK.Ihum</string>
+
 </resources>

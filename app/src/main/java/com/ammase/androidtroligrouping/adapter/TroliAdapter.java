@@ -5,21 +5,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.ammase.androidtroligrouping.Const;
 import com.ammase.androidtroligrouping.R;
 import com.ammase.androidtroligrouping.model.ListKeranjangItem;
-import com.bumptech.glide.Glide;
-
-import java.text.DecimalFormat;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
 /**
  * Created by Lincoln on 31/03/16.
  */
@@ -27,52 +19,58 @@ import butterknife.ButterKnife;
 public class TroliAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
     private List<ListKeranjangItem> resultsList;
     private Context mContext;
-
-    public static final int WithoutImage=1,WithImage=0;
+    int total_types;
 
     public TroliAdapter(Context context, List<ListKeranjangItem> resultsList) {
         this.mContext = context;
         this.resultsList = resultsList;
+        total_types = resultsList.size();
     }
 
     public void setListItem(List<ListKeranjangItem> listItemAllProduk) {
         this.resultsList = listItemAllProduk;
     }
 
-
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         View view;
-        switch (viewType){
-            case WithImage:
-                view=LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_header,parent,false);
-                MyViewHolderHeader imageViewHolder=new MyViewHolderHeader(view);
-                return imageViewHolder;
-
-            case WithoutImage:
-                view=LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_keranjang,parent,false);
-                MyViewHolder withoutImageViewHolder=new MyViewHolder(view);
-                return withoutImageViewHolder;
+        switch (viewType) {
+            case ListKeranjangItem.VIEW_HEADER:
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_header, parent, false);
+                return new MyViewHeader(view);
+            case ListKeranjangItem.VIEW_BODY:
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_body, parent, false);
+                return new MyViewBody(view);
         }
         return null;
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-        //DecimalFormat formatter = new DecimalFormat("#,###,###");
-        switch (resultsList.get(position).getData()){
-            case WithImage:
-                ((ImageViewHolder) holder).imageView.setImageResource(dataList.get(position).photo);
-                ((ImageViewHolder) holder).title.setText(dataList.get(position).title);
-                ((ImageViewHolder) holder).about.setText(dataList.get(position).about);
-                break;
-            case WithoutImage:
-                ((WithoutImageViewHolder) holder).title.setText(dataList.get(position).title);
-                ((WithoutImageViewHolder) holder).about.setText(dataList.get(position).about);
-                break;
+    public int getItemViewType(int position) {
+        switch (resultsList.get(position).type) {
+            case 0:
+                return ListKeranjangItem.VIEW_HEADER;
+            case 1:
+                return ListKeranjangItem.VIEW_BODY;
+            default:
+                return -1;
         }
+    }
 
+    @Override
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int listPosition) {
+        ListKeranjangItem object = resultsList.get(listPosition);
+        if (object != null) {
+            switch (object.type) {
+                case ListKeranjangItem.VIEW_HEADER:
+                    ((MyViewHeader) holder).textViewHeader.setText(object.getNamaToko());
+                    break;
+                case ListKeranjangItem.VIEW_BODY:
+                    ((MyViewBody) holder).textViewNama.setText(object.getData().get(listPosition).getNamaProduk());
+                    ((MyViewBody) holder).textViewAlamat.setText(object.getData().get(listPosition).getHargaSatuan());
+                    break;
+            }
+        }
     }
 
     @Override
@@ -80,36 +78,23 @@ public class TroliAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return resultsList.size();
     }
 
-
-    @Override
-    public int getItemViewType(int position) {
-        if (resultsList.get(position).getData() == WithImage) {
-            return WithImage;}
-        return WithoutImage;
-    }
-
-    public class MyViewHolderHeader extends RecyclerView.ViewHolder {
-        @BindView(R.id.textViewToko) ImageView textViewToko;
-
-        public MyViewHolderHeader(View view) {
+    public class MyViewHeader extends RecyclerView.ViewHolder {
+        @BindView(R.id.textViewHeader) TextView textViewHeader;
+        public MyViewHeader(View view) {
             super(view);
             ButterKnife.bind(this, view);
 
         }
     }
 
-
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewBody extends RecyclerView.ViewHolder {
         @BindView(R.id.textViewNama) TextView textViewNama;
-        @BindView(R.id.textViewHarga) TextView textViewHarga;
+        @BindView(R.id.textViewAlamat) TextView textViewAlamat;
 
-        public MyViewHolder(View view) {
+        public MyViewBody(View view) {
             super(view);
             ButterKnife.bind(this, view);
 
         }
     }
-
-
-
 }
